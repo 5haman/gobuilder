@@ -10,20 +10,19 @@ ENV GOPATH=/go \
 WORKDIR /go/src/github.com/gliderlabs
 RUN set -ex \
     && apk-install bash build-base curl go git mercurial \
-    && curl -sSL https://github.com/gliderlabs/registrator/archive/v${REGISTRATOR_VERSION}.tar.gz | tar xz \
-    && mv registrator-${REGISTRATOR_VERSION} registrator \
-    && mkdir /go/src/github.com/docker \
-    && cd /go/src/github.com/docker \
-    && curl -sSL https://github.com/docker/swarm/archive/v${SWARM_VERSION}.tar.gz | tar xz \
-    && mv swarm-${SWARM_VERSION} swarm \
+    && git clone https://github.com/gliderlabs/registrator \
+    #&& mkdir /go/src/github.com/docker \
+    #&& cd /go/src/github.com/docker \
+    #&& curl -sSL https://github.com/docker/swarm/archive/v${SWARM_VERSION}.tar.gz | tar xz \
+    #&& mv swarm-${SWARM_VERSION} swarm \
     && cd /go/src/github.com/gliderlabs/registrator \
     && go get \
     && go build -ldflags "-s -X main.Version $(cat VERSION)" \
-    && cd /go/src/github.com/docker/swarm \
-    && go install -v -a -tags netgo -installsuffix netgo \
-        -ldflags "-s -w -X github.com/docker/swarm/version.GITCOMMIT=-X `git rev-parse --short HEAD` \
-        -X github.com/docker/swarm/version.BUILDTIME \"`date -u`\""  \
-    && strip /go/bin/swarm \
+    #&& cd /go/src/github.com/docker/swarm \
+    #&& go install -v -a -tags netgo -installsuffix netgo \
+    #    -ldflags "-s -w -X github.com/docker/swarm/version.GITCOMMIT=-X `git rev-parse --short HEAD` \
+    #    -X github.com/docker/swarm/version.BUILDTIME \"`date -u`\""  \
+    #&& strip /go/bin/swarm \
     && strip /go/bin/registrator \
     && mv /go/bin/* /usr/local/bin \
     && rm -rf /go \
